@@ -36,8 +36,17 @@ for x in Regexs:
 with open("Stripped Data.txt", "w") as KML2TXT:
     KML2TXT.write(KMLData)
 
-# Get KML file and parse out lat-lon coordinates of district outlines
-splitData = KMLData.split("</coordinates>\n")
+# Loop through each district shape and parse out lat-lon coordinates of district outlines
+splitData = KMLData.split("<name>")
+print(splitData[0])
+#temp = KMLData
+i = 0
+for _ in splitData:
+    
+    i += 1
+
+#name = re.search('<name>(.+?)</name>',KMLData,flags=re.DOTALL)
+print(KMLData.count("<name>"))
 
 #for x in splitData:
     #name = re.search('<name>(.+?)</name>',x)
