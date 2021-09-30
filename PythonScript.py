@@ -23,8 +23,10 @@ KMLData = codecs.open('FED_CA_2019_EN.kml','r',encoding='utf-8')
 KMLData = KMLData.read()
 Regexs = ["<description>(.+?)</description>\\n","<styleUrl>(.+?)</styleUrl>\\n",
     "<Snippet(.+?)</Snippet>\\n","<Style(.+?)</Style>\\n","<\?xml(.+?)?>\\n","<kml(.+?)>\\n",
-    "<Document(.+?)>\\n","<MultiGeometry>\\n","<Polygon>\\n","<outerBoundaryIs>\\n","<LinearRing>\\n",
-    "</LinearRing>\\n","</outerBoundaryIs>\\n","</Polygon>\\n","</MultiGeometry>\\n","</Placemark>\\n",
+    "<Document(.+?)>\\n","<MultiGeometry>\\n","<Polygon>\\n",#"<outerBoundaryIs>\\n",
+    "<LinearRing>\\n",
+    "</LinearRing>\\n",#"</outerBoundaryIs>\\n",
+    "</Polygon>\\n","</MultiGeometry>\\n","</Placemark>\\n",
     "<Placemark(.+?)>\\n","\\t","</Folder>\\n","</Document>\\n","</kml>\\n","<name>FED_CA_2019_EN</name>\\n",
     "<Folder(.+?)>\\n","<name>FED_CA_2019_EN</name>\\n",",0"] # unwanted text to remove
 for x in Regexs:
@@ -35,9 +37,9 @@ with open("Stripped Data.txt", "w") as KML2TXT:
     KML2TXT.write(KMLData)
 
 # Get KML file and parse out lat-lon coordinates of district outlines
-#test = KMLData.split("<Placemark")
+splitData = KMLData.split("</coordinates>\n")
 
-#for x in test:
+#for x in splitData:
     #name = re.search('<name>(.+?)</name>',x)
     #name = re.search('<description>(.+?)</description>',x,flags=re.DOTALL)
     #print(name.group(1))
