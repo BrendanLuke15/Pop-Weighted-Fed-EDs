@@ -29,7 +29,7 @@ Regexs = ["<description>(.+?)</description>\\n","<styleUrl>(.+?)</styleUrl>\\n",
     "</Polygon>\\n","</MultiGeometry>\\n","</Placemark>\\n",
     "<Placemark(.+?)>\\n","\\t",#\\t\\t\\t\\t",
     "</Folder>\\n","</Document>\\n","</kml>\\n","<name>FED_CA_2019_EN</name>\\n",
-    "<Folder(.+?)>\\n","<name>FED_CA_2019_EN</name>\\n",",0"] # unwanted text to remove
+    "<Folder(.+?)>\\n","<name>FED_CA_2019_EN</name>\\n","0 "] # unwanted text to remove
 for x in Regexs:
     KMLData = re.sub(x,"",KMLData,flags=re.DOTALL)
 
@@ -37,18 +37,51 @@ for x in Regexs:
 with open("Stripped Data.txt", "w") as KML2TXT:
     KML2TXT.write(KMLData)
 
-# Loop through each district shape and parse out data (name & lat-lon coordinates)
+# Loop through each district and create plot of boundaries for each and save as image
 splitData = KMLData.split("<name>")
 splitData.pop(0) # remove newline first element
-name = []
-coords = []
+name = [""]
+latCen = []
+lonCen = []
 i = 0
 for ED in splitData:
-    name.append(ED[0:ED.find("</name>")])
-    coords.append(ED[ED.find("<coordinates>")+len("<coordinates>"):ED.find("</coordinates>")])
-    coords[i] = re.sub("\\n","",coords[i],flags=re.DOTALL)
-    coords[i] = coords[i][0:len(coords[i])-1]
-    i += 1
+    tempName = ED[0:ED.find("</name>")]
+    if tempName in name: # multi-shape district
+        "do nothing" # defintely do something
+    else: # stand alone district shape OR first instance of district shape
+        name.append(tempName)
+        tempCoords = ED[ED.find("<coordinates>\n")+len("<coordinates>\n"):ED.find("</coordinates>")]
+        tempCoords = tempCoords.split(",")
+        tempCoords.pop(len(tempCoords)-1) # remove newline last element
+        #print("'"+tempCoords[len(tempCoords)-1]+"'")
+        j = 0
+        lat = []
+        lon = []
+        for coord in tempCoords:
+            if j%2 == 0: # even index (longitude)
+                lon.append(float(coord))
+                j += 1
+            else: # odd index (latitude)
+                lat.append(float(coord))
+                #print(type(coord))
+                j += 1
+        #lon.pop(len(lon)-1) # remove newline last element
+        
+            
+        #coords.append(ED[ED.find("<coordinates>")+len("<coordinates>"):ED.find("</coordinates>")])
+        #coords[i] = re.sub("\\n","",coords[i],flags=re.DOTALL)
+        #coords[i] = coords[i][0:len(coords[i])-1]
+        i += 1
 
-# Stop Clock
+    # get outer boundary coords
+
+    # see if inner boundary coords
+
+    # handle multi-shaped districts
+
+plt.plot(lon,lat,'k-',linewidth=2)
+plt.axis('equal')
+
+# Stop Clock & Show Plots
 print('Done! Execution took ' + str(datetime.now() - startTime))
+plt.show()
