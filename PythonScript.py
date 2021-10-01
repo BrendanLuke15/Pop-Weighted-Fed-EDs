@@ -53,10 +53,10 @@ for ED in splitData:
         tempCoords = ED[ED.find("<coordinates>\n")+len("<coordinates>\n"):ED.find("</coordinates>")]
         tempCoords = tempCoords.split(",")
         tempCoords.pop(len(tempCoords)-1) # remove newline last element
-        #print("'"+tempCoords[len(tempCoords)-1]+"'")
         j = 0
         lat = []
         lon = []
+        # write lat and lon to lists
         for coord in tempCoords:
             if j%2 == 0: # even index (longitude)
                 lon.append(float(coord))
@@ -65,13 +65,14 @@ for ED in splitData:
                 lat.append(float(coord))
                 #print(type(coord))
                 j += 1
-        #lon.pop(len(lon)-1) # remove newline last element
-        
-            
-        #coords.append(ED[ED.find("<coordinates>")+len("<coordinates>"):ED.find("</coordinates>")])
-        #coords[i] = re.sub("\\n","",coords[i],flags=re.DOTALL)
-        #coords[i] = coords[i][0:len(coords[i])-1]
+        # create plot and save image
+        plt.plot(lon,lat,'k-',linewidth=2)
+        plt.axis('equal')
+        plt.axis('off')
+        plt.savefig("images/"+name[len(name)-1]+".png",transparent=True,bbox_inches='tight',pad_inches=0)
+        plt.close()
         i += 1
+        print(i)
 
     # get outer boundary coords
 
@@ -79,9 +80,8 @@ for ED in splitData:
 
     # handle multi-shaped districts
 
-plt.plot(lon,lat,'k-',linewidth=2)
-plt.axis('equal')
+
 
 # Stop Clock & Show Plots
 print('Done! Execution took ' + str(datetime.now() - startTime))
-plt.show()
+#plt.show()
