@@ -41,12 +41,13 @@ with open("Stripped Data.txt", "w") as KML2TXT:
 splitData = KMLData.split("<name>")
 splitData.pop(0) # remove newline first element
 name = [""]
-latCen = []
-lonCen = []
+cenLat = []
+cenLon = []
 i = 0
 for ED in splitData:
     tempName = ED[0:ED.find("</name>")]
     if tempName in name: # multi-shape district
+        print("Uh-oh!")
         "do nothing" # defintely do something
     else: # stand alone district shape OR first instance of district shape
         name.append(tempName)
@@ -63,8 +64,10 @@ for ED in splitData:
                 j += 1
             else: # odd index (latitude)
                 lat.append(float(coord))
-                #print(type(coord))
                 j += 1
+        # get center coordinates
+        cenLon.append(sum(lon)/len(lon))
+        cenLat.append(sum(lat)/len(lat))
         # create plot and save image
         plt.plot(lon,lat,'k-',linewidth=2)
         plt.axis('equal')
